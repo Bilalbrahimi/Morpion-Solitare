@@ -31,7 +31,7 @@ public class GameController {
     public GameController(GameEvolution game_evolution,PrincipalScene principal_scene){
         this.principal_scene=principal_scene;
         this.game_evolution=game_evolution;
-        liste_playable_points=game_evolution.getValidePoints();
+        liste_playable_points=game_evolution.get_playable_points();
         play(liste_playable_points);
     }
     

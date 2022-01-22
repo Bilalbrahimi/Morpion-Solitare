@@ -24,7 +24,27 @@ public class Grid {
 	                gameGrid[i][j] = new Point(i, j, -1 ,gridSize,gridSize);
 	            }
 	        }
-	       
+	       /*
+	        gameGrid[0][0].setState(0);
+	        gameGrid[1][1].setState(0);
+	        gameGrid[3][3].setState(0);
+	        gameGrid[4][4].setState(0);
+	        
+	        gameGrid[10][1].setState(0);
+	        gameGrid[11][2].setState(0);
+	        gameGrid[12][3].setState(0);
+	        gameGrid[13][4].setState(0);
+	        
+	        gameGrid[10][0].setState(0);
+	        gameGrid[11][1].setState(0);
+	        gameGrid[13][3].setState(0);
+	        gameGrid[14][4].setState(0);
+	        
+	        gameGrid[11][0].setState(0);
+	        gameGrid[12][1].setState(0);
+	        gameGrid[14][3].setState(0);
+	        gameGrid[15][4].setState(0);
+	        */
 	            int x = (int) gridSize/2 -1;
 	            int y = (int) gridSize/2 -1;
 	            
