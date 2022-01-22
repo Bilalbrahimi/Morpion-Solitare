@@ -144,51 +144,7 @@ public class GameEvolution {
 						
 						
 					}
-					/*
-					else if(lv.contain_Point(pp)) { //vertical
-						boolean b = true;
-						for(int i=yy; i<yy+line_size; i++) {
-							//System.out.println("-------xxx " + xx +"iiiiii "+ i );
-							if(i >= 0 && i < GRID_SIZE) {
-								if(this.grid[xx][i].getState() == -1 && i != y) {
-									b = false;
-								}
-							
-							}
-						}
-						if(b) {
-							System.out.println("-------y " + yy +" y+L "+ (yy+line_size-1) +" xx "+ xx );
-							list_lines.add(new Line(grid[xx][yy],grid[xx][yy+line_size-1]));
-						}
-						
-					}
-					
-					
-					else if(ld1.contain_Point(pp)) { //diag1
-						boolean b = true;
-						for(int i= -line_size; i<0; i++) {
-							if(this.grid[xx+i][yy+i].getState() == -1) {
-								b = true;
-							}
-						}
-						if(b) {
-						
-							list_lines.add(new Line(grid[xx][yy],grid[xx+line_size-1][yy+line_size-1]));
-						}
-						
-						
-					}else if(ld2.contain_Point(pp)) { //diag2
-						boolean b = true;
-						for(int i= 0; i<line_size; i++) {
-							if(this.grid[xx-i][yy-i].getState() == -1) {
-								b = true;
-							}
-						}
-						if(b) {
-							list_lines.add(new Line(grid[xx][yy],grid[xx-line_size-1][yy-line_size-1]));
-						}
-					}*/
-				//}				
+			
 			}
 		}
 		for(int x_ = x-(line_size-1); x_<x+line_size; x_++) {
@@ -220,7 +176,7 @@ public class GameEvolution {
 							}
 						}
 						if(b) {
-							System.out.println("-------y " + yy +" y+L "+ (yy+line_size-1) +" xx "+ xx );
+							//System.out.println("-------y " + yy +" y+L "+ (yy+line_size-1) +" xx "+ xx );
 							list_lines.add(new Line(grid[xx][yy],grid[xx][yy+line_size-1]));
 						}
 						
@@ -239,49 +195,49 @@ public class GameEvolution {
 				//int line_size_h = line_size;
 				if(y_ < 0 && x_>=0) {
 					
-					System.out.println("------- 1" + yy);
-					System.out.println("("+x_+","+y_+")");
+					//System.out.println("------- 1");
+					//System.out.println("("+x_+","+y_+")");
 					yy = 0;
 					xx = xx - y_;
-					System.out.println(">>>--->>>> " + xx+ " , "+yy );
+					//System.out.println(">>>--->>>> " + xx+ " , "+yy );
 					
 				}else if(x_<0 && y_>=0) {
-					System.out.println("------- 2");
-					System.out.println("("+x_+","+y_+")");
+					//System.out.println("------- 2");
+					//System.out.println("("+x_+","+y_+")");
 					xx = 0;
 					yy = yy - x_;
-					System.out.println(">>>--->>>> " + xx+ " , "+yy );
+					//System.out.println(">>>--->>>> " + xx+ " , "+yy );
 					
 					
 				}else if(x_ < 0 && y_ < 0) {
-					System.out.println("------- 3");
-					System.out.println("("+x_+","+y_+")");
+					//System.out.println("------- 3");
+					//System.out.println("("+x_+","+y_+")");
 					int z = Math.min(xx, yy);
 					
 					xx = xx - z;
 					yy = yy - z;
-					System.out.println(">>>--->>>> " + xx+ " , "+yy );
+					//System.out.println(">>>--->>>> " + xx+ " , "+yy );
 				}else if (y_ >= GRID_SIZE - (line_size) && x_ < GRID_SIZE - (line_size) ) {
-					System.out.println("------- 4");
-					System.out.println("("+x_+","+y_+")");
+					//System.out.println("------- 4");
+					//System.out.println("("+x_+","+y_+")");
 					yy= GRID_SIZE - (line_size);
 					int diff = y_ - yy;
 					xx = xx - diff;
-					System.out.println(">>>--->>>> " + xx+ " , "+yy );
+					//System.out.println(">>>--->>>> " + xx+ " , "+yy );
 				}else if (x_ >= GRID_SIZE - (line_size) && y_ < GRID_SIZE - (line_size)) {
-					System.out.println("------- 5");
-					System.out.println("("+x_+","+y_+")");
+					//System.out.println("------- 5");
+					//System.out.println("("+x_+","+y_+")");
 					xx= GRID_SIZE - (line_size);
 					int diff = x_ - xx;
 					yy = yy - diff;
-					System.out.println(">>>--->>>> " + xx+ " , "+yy );
+					//System.out.println(">>>--->>>> " + xx+ " , "+yy );
 				}else if ((x_ >= GRID_SIZE - (line_size)) && (y_ >= GRID_SIZE - (line_size))) {
-					System.out.println("------- 6");
-					System.out.println("("+x_+","+y_+")");
+					//System.out.println("------- 6");
+					//System.out.println("("+x_+","+y_+")");
 					int diff = Math.max(x_ - GRID_SIZE, y_ - GRID_SIZE);
 					xx = x_ - diff - line_size;
 					yy = y_ - diff - line_size;
-					System.out.println(">>>--->>>> " + xx+ " , "+yy );
+					//System.out.println(">>>--->>>> " + xx+ " , "+yy );
 				} 
 				
 
@@ -304,7 +260,7 @@ public class GameEvolution {
 						}
 						if(xx >= 0 && xx + line_size-1 < GRID_SIZE && yy >= 0 && yy + line_size-1 < GRID_SIZE ) {
 							if(b) {
-								System.out.println("->>>>> xx = "+xx+" - yy = "+yy+ "->>>>> xx+ls = "+(xx+line_size-1)+" - yy+ls = "+(yy+line_size-1));
+								//System.out.println("->>>>> xx = "+xx+" - yy = "+yy+ "->>>>> xx+ls = "+(xx+line_size-1)+" - yy+ls = "+(yy+line_size-1));
 								list_lines.add(new Line(grid[xx][yy],grid[xx+line_size-1][yy+line_size-1]));
 							}
 						}else {
@@ -321,47 +277,39 @@ public class GameEvolution {
 				
 				int xx = x_;
 				int yy = y_;
-				//int line_size_h = line_size;
+				
+				
 				if(y_ >= GRID_SIZE && x_>=0) {
 					
-					System.out.println("------- 1" + yy);
-					System.out.println("("+x_+","+y_+")");
 					yy = GRID_SIZE-1;
-					xx = xx + y_ - GRID_SIZE;
-					System.out.println(">>>--->>>> " + xx+ " , "+yy );
+					xx = xx + (y_ - yy);
+					
 					
 				}else if(x_<0 && y_<GRID_SIZE) {
-					System.out.println("------- 2");
-					System.out.println("("+x_+","+y_+")");
+					
 					xx = 0;
 					yy = yy + x_;
-					System.out.println(">>>--->>>> " + xx+ " , "+yy );
-					
-					
 				}else if(x_ < 0 && y_ >= GRID_SIZE) {
 					int z = Math.min(Math.abs(xx), yy - GRID_SIZE);
 					
 					xx = xx + z;
 					yy = yy - z;
 					
-				}else if (y_ <= (line_size) && x_ < GRID_SIZE - (line_size) ) {
-					System.out.println("------- 4");
-					System.out.println("("+x_+","+y_+")");
+				}else if (y_ < (line_size) && x_ < GRID_SIZE - (line_size) ) {
 					yy= line_size-1;
 					int diff = line_size-1 - y_;
 					xx = xx - diff;
-					System.out.println(">>>--->>>> " + xx+ " , "+yy );
-				}else if (x_ >= GRID_SIZE - (line_size) && y_ > (line_size)) {
-					System.out.println("------- 5");
-					System.out.println("("+x_+","+y_+")");
+					
+				}else if (x_ >= GRID_SIZE - (line_size) && y_ >= (line_size)) {
 					xx= GRID_SIZE - (line_size);
 					int diff = x_ - xx;
 					yy = yy + diff;
-					System.out.println(">>>--->>>> " + xx+ " , "+yy );
+					
 				}else if ((x_ >= GRID_SIZE - (line_size)) && (y_ <= (line_size))) {
 					int diff = Math.max(x_ - (GRID_SIZE - line_size), (line_size - 1) - y_);
 					xx = x_ - diff;
 					yy = y_ + diff;
+					
 				} 
 				
 
@@ -370,7 +318,7 @@ public class GameEvolution {
 					Point pp = new Point(xx,yy);
 					
 
-					if(ld1.contain_Point(pp)) { //vertical
+					if(ld2.contain_Point(pp)) { //vertical
 						boolean b = true;
 						for(int i=0; i<line_size; i++) {
 							//System.out.println("-------xxx " + xx +"iiiiii "+ i );

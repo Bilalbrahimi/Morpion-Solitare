@@ -173,9 +173,10 @@ public class PrincipalScene {
 	            viewPoint.setFitWidth(CELL_SIZE);
 	            viewPoint.setImage(new Image("file:src/main/img/btn_vert.png"));
 	            viewPoint.setOnMouseClicked(e->{
-	                //System.out.println(pl);
+	                System.out.println("cliiiiiiiiiiiiiiiiiiiick");
 	                eraseDrawOfCandidatePoints(pl_p);
 	                g_c.validate_line(pl);
+	                
 	            });
 	            points_grid.add(viewPoint,pl.getPoint().getY(),pl.getPoint().getX());
 	        }
