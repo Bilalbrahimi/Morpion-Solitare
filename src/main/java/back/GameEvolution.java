@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+import javafx.scene.control.ChoiceBox;
+
+
 
 
 
@@ -25,7 +28,7 @@ public class GameEvolution {
     private Point[][] grid = new Point[GRID_SIZE][GRID_SIZE];
     private List<Line> all_list_lines = new ArrayList<>();
 
-
+    private int score;
 	/**
 	 * 
 	 * 
@@ -35,6 +38,7 @@ public class GameEvolution {
 		this.setLineSize(lineSize);
 		this.setVersion(version);
 		this.setGrid(Grid.startingGrid(lineSize,GRID_SIZE));
+		this.score = 0;
 	}
 
 
@@ -94,6 +98,32 @@ public class GameEvolution {
         return listPointLines;
     }
 	
+    /**
+     * 
+     * @param cb ChoiceBox
+     * @return GameVersion
+     */
+    private OrientationLine getOrientation(Line l){
+    	int x1 = l.getP_start().getX();
+    	int y1 = l.getP_start().getY();
+    	int x2 = l.getP_end().getX();
+    	int y2 = l.getP_end().getY();
+    	
+    	
+
+		if(x1 == x2){
+			return OrientationLine.H; 
+		}else if(y1 == y2){
+			return OrientationLine.V;
+		}else if(x1-y1 == x2-y2){
+			return OrientationLine.D1;
+		}else if(x1+y1 == x2+ y2){
+			return OrientationLine.D2;
+		}else{ 
+			return OrientationLine.P;
+		}
+    }
+	
 	
 	private List<Line> list_of_playable_lines(Point p){
 		List<Line> list_lines= new ArrayList<>();
@@ -105,46 +135,48 @@ public class GameEvolution {
 		Line ld2 = new Line(new Point(x-(line_size-1),y+(line_size-1)),new Point(x,y));
 		Line lv = new Line(new Point(x,y-(line_size-1)),new Point(x,y));
 		
-		
+		// horizontal
 		for(int x_ = x-(line_size-1); x_<x+line_size; x_++) {
 			for(int y_ = y-(line_size-1); y_<y+line_size; y_++) {
 				
 				int xx = x_;
 				int yy = y_;
-				//int line_size_h = line_size;
 				
 				if(x_ < 0) {
 					xx = 0;
-					//line_size_h = line_size + x_;
 				}else if (x_ >= GRID_SIZE - (line_size)) {
 					xx= GRID_SIZE - (line_size);
 				}
 				
-				
-				//if(xx >= 0 && xx < GRID_SIZE-line_size+1 && yy >= 0 && yy < GRID_SIZE-line_size+1) {
 					Point pp = new Point(xx,yy);
 					
-					if(lh.contain_Point(pp)){// horizontal
-						boolean b = true;
-						for(int i=xx; i<xx+line_size; i++) {
-							//System.out.println("-------xxx " + xx +"iiiiii "+ i );
-							if(i >= 0 && i < GRID_SIZE) {
-								if(this.grid[i][yy].getState() == -1 && i != x) {
-									b = false;
+						if(lh.contain_Point(pp)){
+							boolean b = true;
+							for(int i=xx; i<xx+line_size; i++) {
+								if(i >= 0 && i < GRID_SIZE) {
+									if((this.grid[i][yy].getState() == -1 && i != x)) {
+											b = false;
+									}
 								}
-							
-								
 							}
+							if(b) {
+								boolean bb = true;
+								int nb_points_shared = 1;
+								if(version instanceof DVersion) {
+									nb_points_shared = 0;
+								}
+								Line tmp_l = new Line(grid[xx][yy],grid[xx+line_size-1][yy]);
+								for(Line l : all_list_lines) {
+									if(sharedPoints(l, tmp_l)>nb_points_shared) {
+										bb = false;
+									}
+								}
+								if(bb) {
+									list_lines.add(new Line(grid[xx][yy],grid[xx+line_size-1][yy]));
+								}
+							}	
 						}
-						if(b) {
-							//System.out.println("-------xxx " + xx +" x+L "+ (xx+line_size_h-1) +" yyyyy "+ yy );
-							list_lines.add(new Line(grid[xx][yy],grid[xx+line_size-1][yy]));
-						}
-						
-						
-						
-					}
-			
+					
 			}
 		}
 		for(int x_ = x-(line_size-1); x_<x+line_size; x_++) {
@@ -152,37 +184,40 @@ public class GameEvolution {
 				
 				int xx = x_;
 				int yy = y_;
-				//int line_size_h = line_size;
 				if(y_ < 0) {
 					yy = 0;
 				}else if (y_ >= GRID_SIZE - (line_size)) {
 					yy= GRID_SIZE - (line_size);
 				}
-				
-				
-				//if(xx >= 0 && xx < GRID_SIZE-line_size+1 && yy >= 0 && yy < GRID_SIZE-line_size+1) {
 					Point pp = new Point(xx,yy);
-					
-
 					if(lv.contain_Point(pp)) { //vertical
 						boolean b = true;
 						for(int i=yy; i<yy+line_size; i++) {
-							//System.out.println("-------xxx " + xx +"iiiiii "+ i );
 							if(i >= 0 && i < GRID_SIZE) {
 								if(this.grid[xx][i].getState() == -1 && i != y) {
 									b = false;
 								}
-							
 							}
 						}
 						if(b) {
-							//System.out.println("-------y " + yy +" y+L "+ (yy+line_size-1) +" xx "+ xx );
-							list_lines.add(new Line(grid[xx][yy],grid[xx][yy+line_size-1]));
+							boolean bb = true;
+							int nb_points_shared = 1;
+							if(version instanceof DVersion) {
+								nb_points_shared = 0;
+							}
+							Line tmp_l = new Line(grid[xx][yy],grid[xx][yy+line_size-1]);
+							for(Line l : all_list_lines) {
+								if(sharedPoints(l, tmp_l)>nb_points_shared) {
+									bb = false;
+								}
+							}
+							if(bb) {
+								
+								list_lines.add(tmp_l);
+							}
+							//list_lines.add(new Line(grid[xx][yy],grid[xx][yy+line_size-1]));
 						}
-						
 					}
-					
-			
 			}
 		}
 		
@@ -192,81 +227,66 @@ public class GameEvolution {
 				
 				int xx = x_;
 				int yy = y_;
-				//int line_size_h = line_size;
+
 				if(y_ < 0 && x_>=0) {
-					
-					//System.out.println("------- 1");
-					//System.out.println("("+x_+","+y_+")");
 					yy = 0;
 					xx = xx - y_;
-					//System.out.println(">>>--->>>> " + xx+ " , "+yy );
-					
+
 				}else if(x_<0 && y_>=0) {
-					//System.out.println("------- 2");
-					//System.out.println("("+x_+","+y_+")");
 					xx = 0;
 					yy = yy - x_;
-					//System.out.println(">>>--->>>> " + xx+ " , "+yy );
-					
 					
 				}else if(x_ < 0 && y_ < 0) {
-					//System.out.println("------- 3");
-					//System.out.println("("+x_+","+y_+")");
 					int z = Math.min(xx, yy);
 					
 					xx = xx - z;
 					yy = yy - z;
-					//System.out.println(">>>--->>>> " + xx+ " , "+yy );
 				}else if (y_ >= GRID_SIZE - (line_size) && x_ < GRID_SIZE - (line_size) ) {
-					//System.out.println("------- 4");
-					//System.out.println("("+x_+","+y_+")");
 					yy= GRID_SIZE - (line_size);
 					int diff = y_ - yy;
 					xx = xx - diff;
-					//System.out.println(">>>--->>>> " + xx+ " , "+yy );
 				}else if (x_ >= GRID_SIZE - (line_size) && y_ < GRID_SIZE - (line_size)) {
-					//System.out.println("------- 5");
-					//System.out.println("("+x_+","+y_+")");
 					xx= GRID_SIZE - (line_size);
 					int diff = x_ - xx;
 					yy = yy - diff;
-					//System.out.println(">>>--->>>> " + xx+ " , "+yy );
 				}else if ((x_ >= GRID_SIZE - (line_size)) && (y_ >= GRID_SIZE - (line_size))) {
-					//System.out.println("------- 6");
-					//System.out.println("("+x_+","+y_+")");
 					int diff = Math.max(x_ - GRID_SIZE, y_ - GRID_SIZE);
 					xx = x_ - diff - line_size;
 					yy = y_ - diff - line_size;
-					//System.out.println(">>>--->>>> " + xx+ " , "+yy );
 				} 
-				
 
-				
-				//if(xx >= 0 && xx < GRID_SIZE-line_size+1 && yy >= 0 && yy < GRID_SIZE-line_size+1) {
 					Point pp = new Point(xx,yy);
-					
-
 					if(ld1.contain_Point(pp)) { //vertical
 						boolean b = true;
 						for(int i=0; i<line_size; i++) {
-							//System.out.println("-------xxx " + xx +"iiiiii "+ i );
 								if(xx+i >= 0 && xx + i < GRID_SIZE && yy+i >= 0 && yy + i < GRID_SIZE ) {
 									if(this.grid[xx + i ][yy + i ].getState() == -1 && yy + i != y && xx+i != x) {
 										b = false;
 									}
-								
 								}
-							
 						}
 						if(xx >= 0 && xx + line_size-1 < GRID_SIZE && yy >= 0 && yy + line_size-1 < GRID_SIZE ) {
 							if(b) {
-								//System.out.println("->>>>> xx = "+xx+" - yy = "+yy+ "->>>>> xx+ls = "+(xx+line_size-1)+" - yy+ls = "+(yy+line_size-1));
-								list_lines.add(new Line(grid[xx][yy],grid[xx+line_size-1][yy+line_size-1]));
+								boolean bb = true;
+								int nb_points_shared = 1;
+								if(version instanceof DVersion) {
+									nb_points_shared = 0;
+								}
+								Line tmp_l = new Line(grid[xx][yy],grid[xx+line_size-1][yy+line_size-1]);
+								for(Line l : all_list_lines) {
+									if(sharedPoints(l, tmp_l)>nb_points_shared) {
+										bb = false;
+									}
+								}
+								if(bb) {
+									list_lines.add(tmp_l);
+								}
+								
+								//list_lines.add(new Line(grid[xx][yy],grid[xx+line_size-1][yy+line_size-1]));
 							}
 						}else {
 							continue;
 						}
-						
 					}
 			}
 		}
@@ -313,32 +333,41 @@ public class GameEvolution {
 				} 
 				
 
-				
-				//if(xx >= 0 && xx < GRID_SIZE-line_size+1 && yy >= 0 && yy < GRID_SIZE-line_size+1) {
 					Point pp = new Point(xx,yy);
-					
 
 					if(ld2.contain_Point(pp)) { //vertical
 						boolean b = true;
 						for(int i=0; i<line_size; i++) {
-							//System.out.println("-------xxx " + xx +"iiiiii "+ i );
 								if(xx+i >= 0 && xx + i < GRID_SIZE && yy-i >= 0 && yy - i < GRID_SIZE ) {
 									if(this.grid[xx + i ][yy - i ].getState() == -1 && yy - i != y && xx+i != x) {
 										b = false;
 									}
-								
 								}
-							
 						}
 						if(xx >= 0 && xx + line_size-1 < GRID_SIZE && yy < GRID_SIZE && yy - (line_size-1) >= 0  ) {
 							if(b) {
-								System.out.println("->>>>> xx = "+xx+" - yy = "+yy+ "->>>>> xx+ls = "+(xx+line_size-1)+" - yy+ls = "+(yy+line_size-1));
-								list_lines.add(new Line(grid[xx][yy],grid[xx+line_size-1][yy-(line_size-1)]));
+								
+								boolean bb = true;
+								
+								int nb_points_shared = 1;
+								if(version instanceof DVersion) {
+									nb_points_shared = 0;
+								}
+								Line tmp_l = new Line(grid[xx][yy],grid[xx+line_size-1][yy-(line_size-1)]);
+								for(Line l : all_list_lines) {
+									if(sharedPoints(l, tmp_l)>nb_points_shared) {
+										bb = false;
+									}
+								}
+								if(bb) {
+									list_lines.add(tmp_l);
+								}
+								//System.out.println("->>>>> xx = "+xx+" - yy = "+yy+ "->>>>> xx+ls = "+(xx+line_size-1)+" - yy+ls = "+(yy+line_size-1));
+								//list_lines.add(new Line(grid[xx][yy],grid[xx+line_size-1][yy-(line_size-1)]));
 							}
 						}else {
 							continue;
 						}
-						
 					}
 			}
 		}
@@ -346,6 +375,62 @@ public class GameEvolution {
 		return list_lines;
 		
 		
+	}
+	// fonction qui renvoie combien de points sont partagé entre 2 ligne
+	public int sharedPoints(Line l1, Line l2) {
+		int cpt = 0;
+		List<Point> lp1 = list_points_in_one_line(l1);
+		List<Point> lp2 = list_points_in_one_line(l2);
+		
+		if(l1.get_orientation().equals(l2.get_orientation())) {
+			for(Point p1 : lp1) {
+				for(Point p2 : lp2) {
+					if (p1.equals(p2)) {
+						cpt++;
+					}
+					
+				}
+			}
+		}else {
+			return -1;
+		}
+		return cpt;
+	}
+	
+	public List<Point> list_points_in_one_line(Line l){
+		
+		List<Point> lp = new ArrayList<>();
+    	int x = l.getP_start().getX();
+    	int y = l.getP_start().getY();
+   
+    	int dx = 0;
+    	int dy = 0;
+    	
+    	if(l.get_orientation().equals(OrientationLine.V)) {
+    		dx = 1;
+    		dy = 0;
+    		
+    	}else if(l.get_orientation().equals(OrientationLine.H)) {
+    		dx = 0;
+    		dy = 1;
+    		
+    	}else if(l.get_orientation().equals(OrientationLine.D1)) {
+    		dx = 1;
+    		dy = 1;
+    		
+    	}else if(l.get_orientation().equals(OrientationLine.D2)) {
+    		dx = 1;
+    		dy = -1;
+    	}
+    	
+    	lp.add(l.getP_start());
+    	for (int i = 0;i<this.line_size-1; i++) {
+    		x=x+dx;
+    		y=y+dy;
+    		lp.add(new Point(x,y));
+    	}
+    	return lp;
+
 	}
 	
  	/**
@@ -355,7 +440,15 @@ public class GameEvolution {
  	 */
      public void change_state(Point p, Line l) {
      	this.grid[p.getX()][p.getY()].setState(p.getState());
+     	System.out.println(">>>>>>>> "+ l.getP_start().toString()+ "----"+l.getP_end().toString()+"----"+l.get_orientation());
      	this.all_list_lines.add(l);
      }
+     
+ 	public int getScore() {
+		return score;
+	}
+	public void setScore(int score) {
+		this.score = score;
+	}
 	
 }

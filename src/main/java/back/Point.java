@@ -1,5 +1,8 @@
 package back;
 
+import java.util.List;
+
+
 
 /**
  * 
@@ -58,6 +61,28 @@ public class Point {
 	    	}else System.err.println("the point " + this.toString() + " is not valid");
 	    		
 	    }
+	    
+	    public boolean is_in_lines(OrientationLine o, List<Line> ll) {
+	    	for(Line l : ll) {
+	    		if((l.get_orientation() == o) && l.contain_Point(this)) {
+	    			return true;
+	    		}
+	    	}
+	    	return false;
+	    	
+	    }
+	    
+	    public boolean is_inside_lines(OrientationLine o, List<Line> ll) {
+	    	for(Line l : ll) {
+	    		if((l.get_orientation() == o) && l.contain_Point(this)) {
+	    			if(!(this.equals(l.getP_start())) && (!(this.equals(l.getP_end())))) {
+	    				return true;
+	    			}
+	    		}
+	    	}
+	    	return false;
+	    	
+	    }
 
 	    
 	    /**
@@ -113,6 +138,15 @@ public class Point {
 	    @Override
 	    public String toString() {
 	    	return "("+ x+  ","+ y+ ")";
+	    }
+	    
+	    @Override
+	    public boolean equals(Object o){
+	        if(! (o instanceof Point)) return false;
+
+	        Point p = (Point) o;
+
+	        return  (x==p.getX()) && (y==p.getY());
 	    }
 
 }

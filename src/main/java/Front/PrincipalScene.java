@@ -4,6 +4,7 @@ package front;
 
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -16,16 +17,17 @@ import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
-
+import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 
 import javafx.scene.layout.Pane;
-
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
-
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
 
 // GameScene
@@ -131,9 +133,9 @@ public class PrincipalScene {
        	 * 
        	 * @param line
        	 */
-        void draw_line(Line line){
+        public void draw_line(Line line){
            javafx.scene.shape.Line l = new javafx.scene.shape.Line(mapModelCoordinateToViewCoordinate(line.getP_start().getY()), mapModelCoordinateToViewCoordinate(line.getP_start().getX()), mapModelCoordinateToViewCoordinate(line.getP_end().getY()), mapModelCoordinateToViewCoordinate(line.getP_end().getX()));
-           l.setStroke(Color.GRAY);
+           l.setStroke(Color.RED);
            stack.getChildren().add(l);
        }
         
@@ -173,7 +175,7 @@ public class PrincipalScene {
 	            viewPoint.setFitWidth(CELL_SIZE);
 	            viewPoint.setImage(new Image("file:src/main/img/btn_vert.png"));
 	            viewPoint.setOnMouseClicked(e->{
-	                System.out.println("cliiiiiiiiiiiiiiiiiiiick");
+	                //System.out.println("cliiiiiiiiiiiiiiiiiiiick");
 	                eraseDrawOfCandidatePoints(pl_p);
 	                g_c.validate_line(pl);
 	                
@@ -194,10 +196,59 @@ public class PrincipalScene {
 	            viewPoint.yProperty().setValue(pl.getPoint().getY());
 	            viewPoint.setFitHeight(CELL_SIZE);
 	            viewPoint.setFitWidth(CELL_SIZE);
-	            viewPoint.setImage(new Image("file:src/main/img/btn_vert.png"));
+	            viewPoint.setImage(new Image("file:src/main/img/btn_croix.png"));
 	            points_grid.add(viewPoint,pl.getPoint().getY(),pl.getPoint().getX());
 	        }
-	    }
+	     }
 	     
+	     public void addViewToPointsGrid(Point p){
+	    	 points_grid.add(getViewOfAMovePoint(p),p.getY(),p.getX());
+	     }
+	     
+	     //function to replace image of point with the shot number image
 
+	     /**
+	      * creates a stackpane by stacking an image with a text corresponding the value of the point's p state
+	      * @param p Point
+	      * @return  StackPane
+	      */
+	      StackPane getViewOfAMovePoint(Point p){
+	         int i =p.getX();
+	         int j = p.getY();
+
+	         ImageView imV = new ImageView(new Image("file:src/main/img/btn_blanc.png"));
+	         imV.xProperty().setValue(i);
+	         imV.yProperty().setValue(j);
+	         imV.setFitHeight(CELL_SIZE);
+	         imV.setFitWidth(CELL_SIZE);
+	         Label ll = new Label(String.valueOf(p.getState()));
+	         ll.setFont(Font.font("Verdana", FontWeight.EXTRA_BOLD, 10));
+	         StackPane sp = new StackPane(imV,ll);
+	         return sp;
+	     }
+
+	      /**
+	       * method for drawing possible lines to choose to play a move
+	       * @param pl PointLines
+	       * @param playerController PlayerController
+	       */
+	       public void drawChoiceLines(PlayablePoint pl,GameController playerController){
+	          List<javafx.scene.shape.Line> listViewLine= new ArrayList<>();
+	          for(Line line: pl.getListLines()){
+
+	              javafx.scene.shape.Line l = new javafx.scene.shape.Line(mapModelCoordinateToViewCoordinate(line.getP_start().getY()), mapModelCoordinateToViewCoordinate(line.getP_start().getX()),mapModelCoordinateToViewCoordinate(line.getP_end().getY()),mapModelCoordinateToViewCoordinate(line.getP_end().getX()));
+	              listViewLine.add(l);
+	              l.setStroke(Color.rgb((int)(Math.random()*255), (int)(Math.random()*255), (int)(Math.random()*255)));
+	              l.setStrokeWidth(5);
+	              l.setOnMouseClicked(e->{
+	                  for(int i =0;i<listViewLine.size();i++) stack.getChildren().remove(listViewLine.get(i));
+	                  playerController.validateMove(pl.getPoint(),line);
+	              });
+	              stack.getChildren().add(l);
+	          }
+	      }
+
+	       public void updateScore(){
+	    	   model.setScore(model.getScore());
+	       }
 }

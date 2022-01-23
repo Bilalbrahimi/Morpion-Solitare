@@ -25,26 +25,8 @@ public class Grid {
 	            }
 	        }
 	       
-	        gameGrid[1][4].setState(0);
-	        gameGrid[2][3].setState(0);
-	        gameGrid[3][2].setState(0);
-	        gameGrid[4][1].setState(0);
 	        
-	        gameGrid[2][5].setState(0);
-	        gameGrid[3][4].setState(0);
-	        gameGrid[4][3].setState(0);
-	        gameGrid[5][2].setState(0);
-	        /*
-	        gameGrid[10][0].setState(0);
-	        gameGrid[11][1].setState(0);
-	        gameGrid[13][3].setState(0);
-	        gameGrid[14][4].setState(0);
-	        
-	        gameGrid[11][0].setState(0);
-	        gameGrid[12][1].setState(0);
-	        gameGrid[14][3].setState(0);
-	        gameGrid[15][4].setState(0);
-	        */
+
 	            int x = (int) gridSize/2 -1;
 	            int y = (int) gridSize/2 -1;
 	            

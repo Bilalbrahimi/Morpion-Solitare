@@ -54,7 +54,7 @@ public class GameController {
      public void validate_line(PlayablePoint pl){
         if(pl.getListLines().size()>1){
 
-        	//principal_scene.drawChoiceLines(pl,this);
+        	principal_scene.drawChoiceLines(pl,this);
         }
         else {
             validateMove(pl.getPoint(),pl.getListLines().get(0));
@@ -66,14 +66,15 @@ public class GameController {
       * @param p
       * @param l
       */
-     void validateMove(Point p, Line l){
-    	 //game_evolution.setScore(game_evolution.getScore()+1);
-         //p.setState(game_evolution.getScore());
+     public void validateMove(Point p, Line l){
+    	 game_evolution.setScore(game_evolution.getScore()+1);
+         p.setState(game_evolution.getScore());
          game_evolution.change_state(p,l);
-         //principal_scene.updateScore();
-         //principal_scene.drawLine(l);
-         //principal_scene.addViewToPointsGrid(p);
-         //listPointLines = model.getValidePoints();
+         principal_scene.updateScore();
+         principal_scene.draw_line(l);
+         //System.out.println("draaaaaaaaaw ---------------");
+         principal_scene.addViewToPointsGrid(p);
+         liste_playable_points = game_evolution.get_playable_points();
          play(liste_playable_points);
      }
 
