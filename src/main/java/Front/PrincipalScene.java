@@ -13,28 +13,39 @@ import back.Line;
 import back.PlayablePoint;
 import back.Point;
 import back.controller.GameController;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.StringProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
-
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 import javafx.stage.Screen;
+import javafx.stage.Stage;
 
-// GameScene
+/**
+ * 
+ * represente l'ecran de deroulement d'une partie.
+ * 
+ * @author bilal_brahimi
+ *
+ */
 public class PrincipalScene {
 	
     private Scene scene;
-
+    private Scene menu;
+    private Stage stage;
 
     private GameEvolution model;
 
@@ -43,19 +54,28 @@ public class PrincipalScene {
 
     final static int CELL_SIZE=40;
     
+    private StringProperty score_str = new SimpleStringProperty("Your Score is : 0    ");
+
+
     
     /**
+     * Constructeur de la classe
      * 
+     * @param model
+     * @param stage
+     * @param menu
      */
-    public PrincipalScene(GameEvolution model){
+    public PrincipalScene(GameEvolution model, Stage stage, Scene menu){
         this.model=model;
+        this.menu = menu;
+        this.stage = stage;
         build_game_scene();
     }
 	
 	
 	
     /**
-     * 
+     * preparation de l'interface d'une partie (la grille, les points de depart, affichage du scores...)
      */
      void build_game_scene(){
 
@@ -63,34 +83,46 @@ public class PrincipalScene {
 
     	points_grid = new GridPane();
         stack = new Pane();
-
         draw_grid();
-
         points_grid.setAlignment(Pos.CENTER);
-
         stack.getChildren().add(points_grid);
+        
+        
+        Button btn_main_menu= new Button("Quit game");
+        btn_main_menu.setOnAction(e -> stage.setScene(menu));
+        
+        VBox header= new VBox(300);
+        header.getChildren().addAll(btn_main_menu);
+        header.setAlignment(Pos.CENTER_LEFT);
+        
+        
+        Label score = new Label(score_str.getValue());
+        score.setFont(new Font("Arial", 30));
+        
 
+        score.textProperty().bind(score_str);
+        
         BorderPane borderPane = new BorderPane();
-
-
+        borderPane.setTop(header);
         borderPane.setCenter(stack);
-
-
+        borderPane.setRight(score);
         BorderPane.setMargin(stack, new Insets(25,120,120,300));
-
+        
+        
         Rectangle2D screenBounds = Screen.getPrimary().getVisualBounds();
         setScene(new Scene(borderPane,screenBounds.getWidth(), screenBounds.getHeight()));
 
     }
 
      
-
-      void draw_grid(){
+     /**
+      * dessin de la grille
+      */
+      public void draw_grid(){
          Point p;
          for(int i=0; i<GameEvolution.GRID_SIZE; i++) {
              for (int j = 0; j < GameEvolution.GRID_SIZE; j++) {
                  p=model.getGrid()[i][j];
-                // traitement des differents boutons iciii par la suite
                  points_grid.add(get_view_of_point(p),j,i);
              }
          }
@@ -100,6 +132,7 @@ public class PrincipalScene {
 
        
        /**
+        * representation des deffirents points dans la grille.
         * 
         * @param p Point
         * @return  Imageview
@@ -122,6 +155,7 @@ public class PrincipalScene {
            }
        
        /**
+        * dessine toutes les lignes a chaque etape de la partie.
         * 
         * @param listLines
         */
@@ -130,7 +164,7 @@ public class PrincipalScene {
        }
        
        	/**
-       	 * 
+       	 * dessine une ligne.
        	 * @param line
        	 */
         public void draw_line(Line line){
@@ -140,6 +174,8 @@ public class PrincipalScene {
        }
         
         /**
+         * calculer dune coordonée (resultat en type double)
+         * utiliser pour dessiner une ligne dans la methode drawline.
          * 
          * @param coordinate int
          * @return double
@@ -161,7 +197,7 @@ public class PrincipalScene {
 		}
 		
 		/**
-		 * 
+		 * methode qui dessine les points jouable (point vert)
 		 * @param pl_p
 		 * @param g_c
 		 */
@@ -175,7 +211,7 @@ public class PrincipalScene {
 	            viewPoint.setFitWidth(CELL_SIZE);
 	            viewPoint.setImage(new Image("file:src/main/img/btn_vert.png"));
 	            viewPoint.setOnMouseClicked(e->{
-	                //System.out.println("cliiiiiiiiiiiiiiiiiiiick");
+	                
 	                eraseDrawOfCandidatePoints(pl_p);
 	                g_c.validate_line(pl);
 	                
@@ -185,10 +221,10 @@ public class PrincipalScene {
 	    }
 	    
 	    /**
-	     * 
+	     * methode qui efface les points jouable pour passe a l'etape suivante du jeu.
 	     * @param pl_p
 	     */
-	     void eraseDrawOfCandidatePoints(List<PlayablePoint> pl_p){
+	     public void eraseDrawOfCandidatePoints(List<PlayablePoint> pl_p){
 
 	        for(PlayablePoint pl : pl_p){
 	            ImageView viewPoint =new ImageView();
@@ -201,16 +237,21 @@ public class PrincipalScene {
 	        }
 	     }
 	     
+	     
+	     /**
+	      * ajoute la representation du point a partir duquel on a déja tracer une ligne ( rond avec un chiffre)
+	      * a la grille
+	      * 
+	      * @param p
+	      */
 	     public void addViewToPointsGrid(Point p){
 	    	 points_grid.add(getViewOfAMovePoint(p),p.getY(),p.getX());
 	     }
-	     
-	     //function to replace image of point with the shot number image
 
 	     /**
-	      * creates a stackpane by stacking an image with a text corresponding the value of the point's p state
-	      * @param p Point
-	      * @return  StackPane
+	      * dessine la representation du point a partir duquel on a déja tracer une ligne ( rond avec un chiffre)
+	      * 
+	      * @param p
 	      */
 	      StackPane getViewOfAMovePoint(Point p){
 	         int i =p.getX();
@@ -228,9 +269,11 @@ public class PrincipalScene {
 	     }
 
 	      /**
-	       * method for drawing possible lines to choose to play a move
-	       * @param pl PointLines
-	       * @param playerController PlayerController
+	       * fonction qui donne le choix de lignes traçable a partir d'un point quand plusieurs possibilités s'offrent au joueur
+	       * a partir du meme point.
+	       * 
+	       * @param pl
+	       * @param playerController
 	       */
 	       public void drawChoiceLines(PlayablePoint pl,GameController playerController){
 	          List<javafx.scene.shape.Line> listViewLine= new ArrayList<>();
@@ -247,8 +290,13 @@ public class PrincipalScene {
 	              stack.getChildren().add(l);
 	          }
 	      }
-
+	       
+	       /**
+	        * met a jour l'affichage du score a chaque etape.
+	        */
 	       public void updateScore(){
-	    	   model.setScore(model.getScore());
+	    	   score_str.setValue("Your Score is : "+model.getScore()+"    ");
 	       }
+	       
+
 }

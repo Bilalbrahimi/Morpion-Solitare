@@ -63,6 +63,12 @@ public class Line {
 		}
 
 		
+		/**
+		 * renvoie vrai si le point appartient a la ligne ( y compris les exstrimités)
+		 * 
+		 * @param p
+		 * @return boolean
+		 */
 		public boolean contain_Point(Point p) {
 	        Point p1 = new Point( p.getX() - this.getP_start().getX(),  p.getY() -this.getP_start().getY());
 	        
@@ -77,7 +83,9 @@ public class Line {
 		}
 		
 		
-		
+		/**
+		 * redifinition de la methode toString
+		 */
 		public String toString() {
 			return "{ ("+this.getP_start().getX()+ "," +this.getP_start().getY()+") , (" + this.getP_end().getX()+ "," +this.getP_end().getY()+") }";
 		}

@@ -4,7 +4,9 @@ import java.util.List;
 
 
 /**
- * Classe qui vas definir les points qui sont jouable
+ * Classe qui vas definir les points qui sont jouable.
+ * represente le point jouable et la liste des lignes traçable a partir de ce point.
+ * 
  * @author bilal_brahimi
  *
  */
@@ -40,7 +42,9 @@ public class PlayablePoint {
 		return str;
 	}
 	
-
+	/**
+	 * redifinition de equals
+	 */
     @Override
     public boolean equals(Object o){
         if(! (o instanceof PlayablePoint)) return false;

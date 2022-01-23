@@ -5,10 +5,14 @@ import java.util.List;
 public class DVersion implements Version{
 	
 	/**
-	 * returns true if a point can be used to make a line , returns false otherwise
+	 * verifie si le point p est utilisable pour tracer une ligne ( s'il n'appartient à aucune ligne
+	 * de la liste des lignes qui ont comme orientation o)
+	 * ici (Version D) il faut que le point soit en dehors de toute le lignes (celle avec l'orientation o)
+	 * autrement dit, pas de chauvauchement entre les ligne
+	 * 
 	 * @param p
-	 * @param direction
-	 * @param setLines
+	 * @param o
+	 * @param ll
 	 * @return
 	 */
 	@Override

@@ -7,10 +7,14 @@ import java.util.List;
 public class TVersion implements Version{
 	
 	/**
-	 * returns true if a point can be used to make a line , returns false otherwise
+	 * verifie si le point p est utilisable pour tracer une ligne ( s'il n'appartient à aucune ligne
+	 * de la liste des lignes qui ont comme orientation o)
+	 * ici (Version T) il faut que le point soit en dehors de toute le lignes ou juste l'extrémité de ces derniers
+	 * autrement dit, le chauvauchement entre les lignes est possible (mais qu'à une extremité)
+	 * 
 	 * @param p
-	 * @param direction
-	 * @param setLines
+	 * @param o
+	 * @param ll
 	 * @return
 	 */
 	@Override

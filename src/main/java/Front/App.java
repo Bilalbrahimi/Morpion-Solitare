@@ -4,9 +4,11 @@ package front;
 
 import back.DVersion;
 import back.GameEvolution;
+import back.RandomGame;
 import back.TVersion;
 import back.Version;
 import back.controller.GameController;
+import back.controller.RandomGameController;
 import javafx.application.Application;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Scene;
@@ -20,6 +22,10 @@ import javafx.stage.Stage;
 
 /**
  * 
+ * represente l'ecran principale de l'interface graphique.
+ * 
+ * @author bilal_brahimi
+ *
  */
 public class App extends Application {
 
@@ -44,7 +50,7 @@ public class App extends Application {
         
         
         ChoiceBox<String> game_version = new ChoiceBox<String>();
-        game_version.getItems().addAll("5T","5D");
+        game_version.getItems().addAll("5T","5D","4T","4D");
         game_version.setValue("5T");
 
 
@@ -67,10 +73,20 @@ public class App extends Application {
         
         // Lancer la partie à partir du menu |new -> game|
         game_item.setOnAction(e -> {
-            GameEvolution gameModel = new GameEvolution(5, getVersion(game_version));
-            PrincipalScene gameScene = new PrincipalScene(gameModel);
+            GameEvolution gameModel = new GameEvolution(getLineSize(game_version), getVersion(game_version));
+            PrincipalScene gameScene = new PrincipalScene(gameModel,stage,scene);
             new GameController(gameModel,gameScene);
             stage.setScene(gameScene.getScene());
+        	
+        });
+        
+        // Lancer une partie Randome à partir du menu |new -> game|
+        game_random.setOnAction(e -> {
+            GameEvolution gameModel = new GameEvolution(getLineSize(game_version), getVersion(game_version), new RandomGame());
+            PrincipalScene gameScene = new PrincipalScene(gameModel,stage,scene);
+            
+            stage.setScene(gameScene.getScene());
+            new RandomGameController(gameModel,gameScene);
         	
         });
 
@@ -81,10 +97,12 @@ public class App extends Application {
     }
 
 
+    
     /**
+     * methode qui recupere la version choisi par l'utilisateur
      * 
-     * @param cb ChoiceBox
-     * @return GameVersion
+     * @param cb
+     * @return
      */
     private Version getVersion(ChoiceBox<String> cb){
 
@@ -99,6 +117,17 @@ public class App extends Application {
                 return new TVersion();
         }
     }
+    
+    /**
+     * methode qui recupere la longueure des lignes a tracer selon la version choisi
+     * 
+     * @param cb
+     * @return
+     */
+    private int getLineSize(ChoiceBox<String> cb){
+        return Integer.parseInt(cb.getValue().substring(0,1));
+
+}
     
    
 }

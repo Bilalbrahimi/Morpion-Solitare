@@ -10,8 +10,11 @@ package back;
  *
  */
 public class Grid {
-    /**
-     * 
+    
+	
+	/**
+     * fonction qui trace les points de depare de la grille ( points bleu en forme d'une croix )
+     *  
      * @param lineSize
      * @param gridHight
      * @param gridWidth

@@ -7,10 +7,12 @@ import java.util.List;
 /**
  * 
  * @author bilal_brahimi
- *	Le classe Point nous permet de generer des points sur la garille pour pouvoir jouer.
- *	un point est caracteriser par ses coordoners(x,y) et un statut (-1 par defaut).
+ *	La classe Point nous permet de generer des points sur la garille pour pouvoir jouer.
+ *	un point est caracteriser par ses coordoners(x,y) et un statut (-1 par defaut). 
+ *  il determine l'etat du point en question dans la grille, par exemple s'il peut etre attacher a une ligne.
  */
 public class Point {
+	
 		//abssise du point
 	  	private int x;
 	  	
@@ -31,21 +33,10 @@ public class Point {
 	        this.setY(y);
 	    }
 	    
-	    /**
-	     * 
-	     * @param x
-	     * @param y
-	     * @param limit_hight
-	     * @param limit_width
-	     */
-		public Point(int x, int y,int limit_hight,int limit_width){
-	    	if(is_valide_point(x,limit_hight) && is_valide_point(y,limit_width) ) {
-	            this.setX(x);
-	            this.setY(y);
-	    	}else System.err.println("the point " + this.toString() + " is not valid");
-	    }
+	    
 		
 	    /**
+	     * 2em Constructeure de la classe Point 
 	     * 
 	     * @param x
 	     * @param y
@@ -62,6 +53,14 @@ public class Point {
 	    		
 	    }
 	    
+	    /**
+	     * cettte methode verefie si le point apartient a au moins une des ligne de la list
+	     * des ligne donné en parametre ( y compris les extrimités )
+	     * 
+	     * @param o
+	     * @param ll
+	     * @return boolean
+	     */
 	    public boolean is_in_lines(OrientationLine o, List<Line> ll) {
 	    	for(Line l : ll) {
 	    		if((l.get_orientation() == o) && l.contain_Point(this)) {
@@ -72,6 +71,15 @@ public class Point {
 	    	
 	    }
 	    
+	    
+	    /**
+	     * cettte methode verefie si le point apartient a au moins une des ligne de la list
+	     * des ligne donné en parametre ( sans les extrimités )
+	     * 
+	     * @param o
+	     * @param ll
+	     * @return
+	     */
 	    public boolean is_inside_lines(OrientationLine o, List<Line> ll) {
 	    	for(Line l : ll) {
 	    		if((l.get_orientation() == o) && l.contain_Point(this)) {
@@ -86,6 +94,8 @@ public class Point {
 
 	    
 	    /**
+	     * pour verifier si x est compris entre 0 et limit ( utiliser pour s'assurer que les coordonnés ne 
+	     * depassent pas la grille.
 	     * 
 	     * @param x
 	     * @param limit
@@ -95,10 +105,19 @@ public class Point {
 	        return x >= 0 && x < limit;
 	    }
 
+	    /**
+	     * getter pour x
+	     * @return x
+	     */
 		public int getX() {
 			return x;
 		}
 
+		
+		/**
+		 * setter pour x.
+		 * @param x
+		 */
 		public void setX(int x) {
 			this.x = x;
 		}
@@ -140,6 +159,10 @@ public class Point {
 	    	return "("+ x+  ","+ y+ ")";
 	    }
 	    
+	    
+	    /**
+	     * redifinition de la methode equals
+	     */
 	    @Override
 	    public boolean equals(Object o){
 	        if(! (o instanceof Point)) return false;

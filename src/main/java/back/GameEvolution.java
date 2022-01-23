@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-import javafx.scene.control.ChoiceBox;
+
 
 
 
@@ -12,6 +12,7 @@ import javafx.scene.control.ChoiceBox;
 
 
 /**
+ * La classe qui difinie l'etat du jeu a chaque etape.
  * 
  * @author bilal_brahimi
  *
@@ -27,11 +28,16 @@ public class GameEvolution {
 
     private Point[][] grid = new Point[GRID_SIZE][GRID_SIZE];
     private List<Line> all_list_lines = new ArrayList<>();
+    RandomGame random_game;
+    
 
     private int score;
+    
 	/**
+	 * 1er Constructeur utiliser pour mode utilisateur
 	 * 
-	 * 
+	 * @param lineSize
+	 * @param version
 	 */
 	public GameEvolution(int lineSize,Version version){
 		
@@ -40,8 +46,34 @@ public class GameEvolution {
 		this.setGrid(Grid.startingGrid(lineSize,GRID_SIZE));
 		this.score = 0;
 	}
+	
+	/**
+	 * 2em Constructeur utiliser pour mode ordinateur
+	 * 
+	 * @param lineSize
+	 * @param version
+	 * @param random_game
+	 */
+	public GameEvolution(int lineSize,Version version, RandomGame random_game){
+		this.random_game = random_game;
+		this.setLineSize(lineSize);
+		this.setVersion(version);
+		this.setGrid(Grid.startingGrid(lineSize,GRID_SIZE));
+		this.score = 0;
+	}
 
+	
+	/**
+	 * fonction qui lance la partie en mode ordinateur.
+	 */
+    public void start_randome_game() {
+    	random_game.play(this);
+    }
 
+    /**
+     * getter pour la grille.
+     * @return
+     */
 	public Point[][] getGrid() {
 		return grid;
 	}
@@ -76,6 +108,8 @@ public class GameEvolution {
 	}
 	
 	/**
+	 * cette fonction renvoie une liste des points jouable ( les points verts dans l'interface graphique)
+	 * l'objet PlayablePoint contient le point jouable et une liste des lignes traçable a partir de ce point.
 	 * 
 	 * @return PointLines
 	 */
@@ -98,33 +132,14 @@ public class GameEvolution {
         return listPointLines;
     }
 	
-    /**
-     * 
-     * @param cb ChoiceBox
-     * @return GameVersion
-     */
-    private OrientationLine getOrientation(Line l){
-    	int x1 = l.getP_start().getX();
-    	int y1 = l.getP_start().getY();
-    	int x2 = l.getP_end().getX();
-    	int y2 = l.getP_end().getY();
-    	
-    	
-
-		if(x1 == x2){
-			return OrientationLine.H; 
-		}else if(y1 == y2){
-			return OrientationLine.V;
-		}else if(x1-y1 == x2-y2){
-			return OrientationLine.D1;
-		}else if(x1+y1 == x2+ y2){
-			return OrientationLine.D2;
-		}else{ 
-			return OrientationLine.P;
-		}
-    }
 	
-	
+	/**
+	 * renvoie la liste des lignes tracable a partir du point p, (la liste peut etre vide 
+	 * si le point est finalement pas utilisable )
+	 * 
+	 * @param p
+	 * @return liste des ligne
+	 */
 	private List<Line> list_of_playable_lines(Point p){
 		List<Line> list_lines= new ArrayList<>();
 		int x = p.getX();
@@ -135,7 +150,7 @@ public class GameEvolution {
 		Line ld2 = new Line(new Point(x-(line_size-1),y+(line_size-1)),new Point(x,y));
 		Line lv = new Line(new Point(x,y-(line_size-1)),new Point(x,y));
 		
-		// horizontal
+		// recherche des ligne horizontale traçable a partir du point p
 		for(int x_ = x-(line_size-1); x_<x+line_size; x_++) {
 			for(int y_ = y-(line_size-1); y_<y+line_size; y_++) {
 				
@@ -179,6 +194,8 @@ public class GameEvolution {
 					
 			}
 		}
+		
+		// recherche des ligne verticale traçable a partir du point p
 		for(int x_ = x-(line_size-1); x_<x+line_size; x_++) {
 			for(int y_ = y-(line_size-1); y_<y+line_size; y_++) {
 				
@@ -190,7 +207,7 @@ public class GameEvolution {
 					yy= GRID_SIZE - (line_size);
 				}
 					Point pp = new Point(xx,yy);
-					if(lv.contain_Point(pp)) { //vertical
+					if(lv.contain_Point(pp)) { 
 						boolean b = true;
 						for(int i=yy; i<yy+line_size; i++) {
 							if(i >= 0 && i < GRID_SIZE) {
@@ -215,13 +232,13 @@ public class GameEvolution {
 								
 								list_lines.add(tmp_l);
 							}
-							//list_lines.add(new Line(grid[xx][yy],grid[xx][yy+line_size-1]));
+							
 						}
 					}
 			}
 		}
 		
-		//diagonale
+		// recherche des ligne diagonale ( du bas vers le haut) traçable a partir du point p
 		for(int x_ = x-(line_size-1); x_<x+line_size; x_++) {
 			for(int y_ = y-(line_size-1); y_<y+line_size; y_++) {
 				
@@ -256,7 +273,7 @@ public class GameEvolution {
 				} 
 
 					Point pp = new Point(xx,yy);
-					if(ld1.contain_Point(pp)) { //vertical
+					if(ld1.contain_Point(pp)) { 
 						boolean b = true;
 						for(int i=0; i<line_size; i++) {
 								if(xx+i >= 0 && xx + i < GRID_SIZE && yy+i >= 0 && yy + i < GRID_SIZE ) {
@@ -282,7 +299,7 @@ public class GameEvolution {
 									list_lines.add(tmp_l);
 								}
 								
-								//list_lines.add(new Line(grid[xx][yy],grid[xx+line_size-1][yy+line_size-1]));
+								
 							}
 						}else {
 							continue;
@@ -291,7 +308,7 @@ public class GameEvolution {
 			}
 		}
 		
-		//diagonale 2
+		// recherche des ligne diagonale ( du haut vers le bas) traçable a partir du point p
 		for(int x_ = x-(line_size-1); x_<x+line_size; x_++) {
 			for(int y_ = y-(line_size-1); y_<y+line_size; y_++) {
 				
@@ -335,7 +352,7 @@ public class GameEvolution {
 
 					Point pp = new Point(xx,yy);
 
-					if(ld2.contain_Point(pp)) { //vertical
+					if(ld2.contain_Point(pp)) { 
 						boolean b = true;
 						for(int i=0; i<line_size; i++) {
 								if(xx+i >= 0 && xx + i < GRID_SIZE && yy-i >= 0 && yy - i < GRID_SIZE ) {
@@ -362,8 +379,7 @@ public class GameEvolution {
 								if(bb) {
 									list_lines.add(tmp_l);
 								}
-								//System.out.println("->>>>> xx = "+xx+" - yy = "+yy+ "->>>>> xx+ls = "+(xx+line_size-1)+" - yy+ls = "+(yy+line_size-1));
-								//list_lines.add(new Line(grid[xx][yy],grid[xx+line_size-1][yy-(line_size-1)]));
+								
 							}
 						}else {
 							continue;
@@ -376,7 +392,14 @@ public class GameEvolution {
 		
 		
 	}
-	// fonction qui renvoie combien de points sont partagé entre 2 ligne
+	
+	
+	/**
+	 * fonction qui renvoie combien de points sont partagé entre 2 ligne
+	 * @param l1
+	 * @param l2
+	 * @return int
+	 */
 	public int sharedPoints(Line l1, Line l2) {
 		int cpt = 0;
 		List<Point> lp1 = list_points_in_one_line(l1);
@@ -397,6 +420,12 @@ public class GameEvolution {
 		return cpt;
 	}
 	
+	/**
+	 * fonction qui renvois la liste de tous les points d'une ligne.
+	 * 
+	 * @param l
+	 * @return liste des points
+	 */
 	public List<Point> list_points_in_one_line(Line l){
 		
 		List<Point> lp = new ArrayList<>();
@@ -434,13 +463,13 @@ public class GameEvolution {
 	}
 	
  	/**
+ 	 * Fonction qui change l'état du point et de la ligne quand le joueur trace la ligne l à pazrtir du point p
  	 *
  	 * @param p Point
- 	 * @param l Lines
+ 	 * @param l Line
  	 */
      public void change_state(Point p, Line l) {
      	this.grid[p.getX()][p.getY()].setState(p.getState());
-     	System.out.println(">>>>>>>> "+ l.getP_start().toString()+ "----"+l.getP_end().toString()+"----"+l.get_orientation());
      	this.all_list_lines.add(l);
      }
      
