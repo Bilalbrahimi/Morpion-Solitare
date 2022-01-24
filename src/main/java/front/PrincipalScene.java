@@ -4,6 +4,9 @@ package front;
 
 
 
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,6 +45,8 @@ import javafx.stage.Stage;
  *
  */
 public class PrincipalScene {
+	
+	public static boolean IS_RANDOM = false;
 	
     private Scene scene;
     private Scene menu;
@@ -89,7 +94,19 @@ public class PrincipalScene {
         
         
         Button btn_main_menu= new Button("Quit game");
-        btn_main_menu.setOnAction(e -> stage.setScene(menu));
+        btn_main_menu.setOnAction(e ->{
+        	stage.setScene(menu);
+        	try {
+        		if(!IS_RANDOM) {
+        			this.write_score("src/main/score/player.txt");
+        		}else {
+        			this.write_score("src/main/score/random.txt");
+        		}
+			} catch (IOException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+        });
         
         VBox header= new VBox(300);
         header.getChildren().addAll(btn_main_menu);
@@ -298,5 +315,23 @@ public class PrincipalScene {
 	    	   score_str.setValue("Your Score is : "+model.getScore()+"    ");
 	       }
 	       
+	       
+	       public void write_score(String file) throws IOException{
+		       	FileWriter writer;
+			    FileReader reader;
+			    List<Integer> ch = new ArrayList<>();
+			    int c;
+			    reader = new FileReader(file);
+			    while((c = reader.read()) != -1) {
+			    	ch.add(c);
+			    }
+			    reader.close();
+			    writer = new FileWriter(file);
+		   	    for(int i : ch) {
+		   	    	writer.write(i);
+		   	    }
+		   	    writer.write(model.getScore()+"\n");
+		   	    writer.close();
+	       }
 
 }

@@ -29,6 +29,7 @@ public class GameEvolution {
     private Point[][] grid = new Point[GRID_SIZE][GRID_SIZE];
     private List<Line> all_list_lines = new ArrayList<>();
     RandomGame random_game;
+    GlutonGame gluton_game;
     
 
     private int score;
@@ -61,6 +62,34 @@ public class GameEvolution {
 		this.setGrid(Grid.startingGrid(lineSize,GRID_SIZE));
 		this.score = 0;
 	}
+	
+	
+	/**
+	 * 3em Constructeur utiliser pour mode ordinateur
+	 * 
+	 * @param lineSize
+	 * @param version
+	 * @param gluton_game
+	 */
+	public GameEvolution(int lineSize,Version version, GlutonGame gluton_game){
+		this.gluton_game = gluton_game;
+		this.setLineSize(lineSize);
+		this.setVersion(version);
+		this.setGrid(Grid.startingGrid(lineSize,GRID_SIZE));
+		this.score = 0;
+	}
+	
+	public GameEvolution get_copie_game_evolution (){
+		GameEvolution game_copie= new GameEvolution(this.line_size, this.version, this.gluton_game);
+				
+		game_copie.grid = this.grid;
+		game_copie.all_list_lines = this.all_list_lines;
+		game_copie.score = this.score;
+		
+		return game_copie;
+	}
+	
+	
 
 	
 	/**
@@ -68,6 +97,13 @@ public class GameEvolution {
 	 */
     public void start_randome_game() {
     	random_game.play(this);
+    }
+    
+	/**
+	 * fonction qui lance la partie en mode ordinateur (gluton).
+	 */
+    public void start_gluton_game() {
+    	gluton_game.play(this);
     }
 
     /**
