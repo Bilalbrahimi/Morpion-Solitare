@@ -55,7 +55,7 @@ public class GlutonGame {
     	List<PlayablePoint> listPointLines = ge.get_playable_points();
     	PlayablePointRandom pointLine;
     	int shotNumber = 1;
-    	while (listPointLines.size() > 0){
+    	while (listPointLines.size() > 0 && shotNumber<50){
     		pointLine = choice(listPointLines,ge);
     		pointLine.getPoint().setState(shotNumber);
 			ge.getAllListLines().add(pointLine.getLine());

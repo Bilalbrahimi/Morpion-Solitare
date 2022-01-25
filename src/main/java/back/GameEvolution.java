@@ -80,11 +80,29 @@ public class GameEvolution {
 	}
 	
 	public GameEvolution get_copie_game_evolution (){
-		GameEvolution game_copie= new GameEvolution(this.line_size, this.version, this.gluton_game);
-				
-		game_copie.grid = this.grid;
-		game_copie.all_list_lines = this.all_list_lines;
-		game_copie.score = this.score;
+		GameEvolution game_copie= new GameEvolution(this.line_size, this.version);
+		
+		game_copie.grid = new Point[GRID_SIZE][GRID_SIZE];
+		for(int i =0; i < GRID_SIZE; i++){
+            for(int j=0; j < GRID_SIZE; j++){
+            	Point p = new Point(this.grid[i][j].getX(),this.grid[i][j].getY());
+            	p.setState(this.grid[i][j].getState());
+            	game_copie.grid[i][j] = p;
+            }
+		}
+		
+		game_copie.all_list_lines = new ArrayList<>();
+		
+		for(Line l : this.all_list_lines) {
+			Point ps = new Point(l.getP_start().getX(),l.getP_start().getY());
+			ps.setState(l.getP_start().getState());
+			Point pe = new Point(l.getP_end().getX(),l.getP_end().getY());
+			pe.setState(l.getP_end().getState());
+			Line ml = new Line(ps,pe);
+			game_copie.all_list_lines.add(ml);
+		}
+		
+		
 		
 		return game_copie;
 	}

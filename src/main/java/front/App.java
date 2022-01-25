@@ -71,9 +71,10 @@ public class App extends Application {
         centre_content.setAlignment(Pos.CENTER);
         centre_content.setMargin(btn_play,new Insets(0, 0, 0, 250));
         centre_content.setMargin(btn_random,new Insets(0, 0, 0, 250));
+        centre_content.setMargin(btn_gluton,new Insets(0, 0, 0, 250));
         
         
-        Label score = new Label("Best Score is:"+this.lire_score());
+        Label score = new Label("Best Score is:"+this.lire_score()+"  ");
         score.setFont(new Font("Arial", 30));
      
 
